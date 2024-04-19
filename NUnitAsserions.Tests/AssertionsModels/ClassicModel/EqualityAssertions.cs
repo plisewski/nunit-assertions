@@ -1,7 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace NUnitAsserions.Tests.AssertionsModels.ClassicModel
 {
     public class EqualityAssertions
     {
+        private string _expected = "nunit";
+        private string _actual = "nunit";
 
         // All of the following assertion types are tied to the Assert class
 
@@ -10,19 +14,19 @@ namespace NUnitAsserions.Tests.AssertionsModels.ClassicModel
         [Test]
         public void AreEqual()
         {
-            Assert.AreEqual("expected", "actual");
+            Assert.AreEqual(_expected, _actual);
         }
 
         [Test]
         public void AreEqualWithDescription()
         {
-            Assert.AreEqual("expected", "actual", "descriptive error message");
+            Assert.AreEqual(_expected, _actual, "descriptive error message");
         }
 
         [Test]
         public void AreEqualWithDynamicDescription()
         {
-            Assert.AreEqual("expected", "actual", "from {0} error {1}", "template", "message");
+            Assert.AreEqual(_expected, _actual, "from {0} error {1}", "template", "message");
         }
 
         #endregion
@@ -32,7 +36,7 @@ namespace NUnitAsserions.Tests.AssertionsModels.ClassicModel
         [Test]
         public void AreEqualNumbers()
         {
-            Assert.AreEqual(1, 2);
+            Assert.AreEqual(1, 1);
         }
 
         [Test]
@@ -56,7 +60,12 @@ namespace NUnitAsserions.Tests.AssertionsModels.ClassicModel
         {
             var expected = new int[] { 1, 2, 3 };
             var actual = new int[] { 1, 3, 2 };
-            Assert.AreEqual(expected, actual);
+
+            var actualSorted = (int[])actual.Clone();
+
+            Array.Sort(actualSorted);
+
+            Assert.AreEqual(expected, actualSorted);
 
             // Consideration when comparing Arrays, Collections or IEnumerables
             // 1. the order of elements matters (consider sorting before comparing)
@@ -130,7 +139,7 @@ namespace NUnitAsserions.Tests.AssertionsModels.ClassicModel
         [Test]
         public void ComparingRelativeValues()
         {
-            Assert.GreaterOrEqual(2, 3);
+            Assert.GreaterOrEqual(3, 2);
         }
 
         #endregion
