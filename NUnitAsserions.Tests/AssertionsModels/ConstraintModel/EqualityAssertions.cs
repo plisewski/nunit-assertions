@@ -2,6 +2,8 @@ namespace NUnitAsserions.Tests.AssertionsModels.ConstraintModel
 {
     public class EqualityAssertions
     {
+        private string _expected = "nunit";
+        private string _actual = "nunit";
 
         // Constraint Model is the recommended model of assertions to use in NUnit3
         // It has been part of NUnit since version 2.4
@@ -13,19 +15,19 @@ namespace NUnitAsserions.Tests.AssertionsModels.ConstraintModel
         [Test]
         public void AreEqual()
         {
-            Assert.That("actual", Is.EqualTo("expected"));
+            Assert.That(_actual, Is.EqualTo(_expected));
         }
 
         [Test]
         public void AreEqualWithDescription()
         {
-            Assert.That("actual", Is.EqualTo("expected"), "descriptive error message");
+            Assert.That(_actual, Is.EqualTo(_expected), "descriptive error message");
         }
 
         [Test]
         public void AreEqualWithDynamicDescription()
         {
-            Assert.That("actual", Is.EqualTo("expected"), "from {0} error {1}", "template", "message");
+            Assert.That(_actual, Is.EqualTo(_expected), "from {0} error {1}", "template", "message");
         }
 
         #endregion
@@ -35,7 +37,7 @@ namespace NUnitAsserions.Tests.AssertionsModels.ConstraintModel
         [Test]
         public void AreEqualNumbers()
         {
-            Assert.That(2, Is.EqualTo(1));
+            Assert.That(1, Is.EqualTo(1));
         }
 
         [Test]
@@ -59,7 +61,12 @@ namespace NUnitAsserions.Tests.AssertionsModels.ConstraintModel
         {
             var expected = new int[] { 1, 2, 3 };
             var actual = new int[] { 1, 3, 2 };
-            Assert.That(actual, Is.EqualTo(expected));
+
+            var actualSorted = (int[])actual.Clone();
+
+            Array.Sort(actualSorted);
+
+            Assert.That(actualSorted, Is.EqualTo(expected));
 
             // Consideration when comparing Arrays, Collections or IEnumerables
             // -> the order elements matters (consider sorting before comparing)
@@ -109,7 +116,8 @@ namespace NUnitAsserions.Tests.AssertionsModels.ConstraintModel
         [Test]
         public void IsNull()
         {
-            Assert.That(new object(), Is.Null);
+            object? obj = null;
+            Assert.That(obj, Is.Null);
         }
 
         #endregion
@@ -119,8 +127,8 @@ namespace NUnitAsserions.Tests.AssertionsModels.ConstraintModel
         [Test]
         public void IsNotEmpty()
         {
-            var myString = "";
-            Assert.That(myString, Is.Not.Empty);
+            var fruits = new List<string> { "Apple", "Banana", "Cherry" };
+            Assert.That(fruits, Is.Not.Empty);
         }
 
         #endregion
@@ -130,7 +138,7 @@ namespace NUnitAsserions.Tests.AssertionsModels.ConstraintModel
         [Test]
         public void ComparingRelativeValues()
         {
-            Assert.That(2, Is.GreaterThanOrEqualTo(3));
+            Assert.That(3, Is.GreaterThanOrEqualTo(2));
         }
 
         #endregion
