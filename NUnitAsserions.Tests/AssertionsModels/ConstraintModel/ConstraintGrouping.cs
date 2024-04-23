@@ -1,4 +1,6 @@
-﻿namespace NUnitAsserions.Tests.AssertionsModels.ConstraintModel
+﻿using System.Text.Json;
+
+namespace NUnitAsserions.Tests.AssertionsModels.ConstraintModel
 {
     public class ConstraintGrouping
     {
@@ -13,7 +15,7 @@
             Assert.That(new List<int> { 3, 2, 1 }, Is.EquivalentTo(new List<int> { 1, 2, 3 }));
             Assert.That(2, Is.GreaterThan(1));
             Assert.That(0, Is.Zero);
-            Assert.That(new object(), Is.BinarySerializable);
+            CustomAsserts.IsJsonSerializable(new object());
 
         }
 
@@ -22,7 +24,7 @@
         {
             var numbers = new List<int> { 1, 2, 3, 4, 5 };
 
-            Assert.That(numbers, Has.Exactly(2).Matches<int>(x => x % 2 != 0));
+            Assert.That(numbers, Has.Exactly(3).Matches<int>(x => x % 2 != 0));
             Assert.That(numbers, Has.Member(1));
             Assert.That(numbers, Has.All.Positive);
             Assert.That(numbers, Has.Some.Matches<int>(x => x % 2 == 0));
@@ -47,10 +49,10 @@
             Assert.That(fileName, Does.StartWith("report"));
             Assert.That(fileName, Does.EndWith(".pdf"));
             Assert.That(fileName, Does.Contain("pdf"));
-            Assert.That(fileName, Does.Match("regex pattern"));
+            Assert.That(fileName, Does.Match(@".*\.pdf$"));
 
             List<string> items = new List<string> { "apple", "banana", "apricot", "avocado", "almond" };
-            Assert.That(items, Has.Exactly(3).Matches<string>(item => item.StartsWith("a")));
+            Assert.That(items, Has.Exactly(4).Matches<string>(item => item.StartsWith("a")));
         }
 
         [Test]
@@ -90,6 +92,24 @@
             }
 
             Assert.That(MethodThatThrowsSlowly, Throws.TypeOf<TimeoutException>().After(1500));
+        }
+    }
+
+    public static class CustomAsserts
+    {
+        public static void IsJsonSerializable<T>(T obj)
+        {
+            try
+            {
+                string json = JsonSerializer.Serialize(obj);
+                T? result = JsonSerializer.Deserialize<T>(json);
+
+                Assert.IsNotNull(result);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail($"Expected to be JSON serializable but failed with exception: {ex.Message}");
+            }
         }
     }
 }
