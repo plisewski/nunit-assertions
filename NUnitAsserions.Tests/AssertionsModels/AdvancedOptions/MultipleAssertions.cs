@@ -1,4 +1,7 @@
-﻿namespace NUnitAsserions.Tests.AssertionsModels.AdvancedOptions
+﻿using FluentAssertions;
+using FluentAssertions.Execution;
+
+namespace NUnitAsserions.Tests.AssertionsModels.AdvancedOptions
 {
     public class MultipleAssertions
     {
@@ -11,6 +14,17 @@
                 Assert.That("foo", Is.Not.EqualTo("boo"));
                 Assert.That(true, Is.True);
             });
+        }
+
+        [Test]
+        public void TestMultipleAssertionsWithFluentAssertions()
+        {
+            using (new AssertionScope())
+            {
+                1.Should().Be(1);
+                "foo".Should().NotBe("boo");
+                true.Should().BeTrue();
+            }
         }
     }
 }
